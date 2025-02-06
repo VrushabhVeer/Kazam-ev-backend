@@ -10,7 +10,12 @@ const app = express();
 const port = process.env.PORT;
 
 app.use(express.json());
-app.use(cors());
+app.use(
+  cors({
+    origin: "https://kazam-ev-assignment.netlify.app/",
+    credentials: true,
+  })
+);
 
 app.get("/", (req, res) => {
   res.send("welcome to task manager app");
@@ -18,7 +23,6 @@ app.get("/", (req, res) => {
 
 app.use("/tasks", taskRouter);
 app.use("/user", userRouter);
-
 
 databaseConnection()
   .then(() => {
