@@ -12,7 +12,7 @@ const port = process.env.PORT;
 app.use(express.json());
 app.use(
   cors({
-    origin: "https://kazam-ev-assignment.netlify.app/",
+    origin: "https://kazam-ev-assignment.netlify.app",
     credentials: true,
   })
 );
