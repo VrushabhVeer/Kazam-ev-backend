@@ -11,6 +11,15 @@ const taskValidationSchema = Joi.object({
   completed: Joi.boolean(),
 });
 
+// Middleware to validate task data
+const validateTaskData = (req, res, next) => {
+  const { error } = taskValidationSchema.validate(req.body);
+  if (error) {
+    return res.status(400).json({ message: error.details[0].message });
+  }
+  next();
+};
+
 // get all tasks
 taskRouter.get("/mytasks", authentication, async (req, res) => {
   try {
@@ -22,7 +31,7 @@ taskRouter.get("/mytasks", authentication, async (req, res) => {
 });
 
 // create a new task
-taskRouter.post("/create", authentication, async (req, res) => {
+taskRouter.post("/create", authentication, validateTaskData, async (req, res) => {
   try {
     const { title, description, completed } = req.body;
 
@@ -61,7 +70,7 @@ taskRouter.delete("/delete/:taskId", authentication, async (req, res) => {
   }
 });
 
-taskRouter.put("/update/:id", authentication, async (req, res) => {
+taskRouter.put("/update/:id", authentication, validateTaskData, async (req, res) => {
   try {
     const { title, description, completed } = req.body;
     const updatedTask = await TaskModel.findByIdAndUpdate(
